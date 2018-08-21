@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
 import Handles from './Handles/Handles';
-import { ExcitedSVGProps } from './types';
+import { ExcitedSVGProps } from './constants/types';
 
 const ExcitedSVG: React.SFC<ExcitedSVGProps> = ({
   position,

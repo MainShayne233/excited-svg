@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
-import { Position, Dimensions } from '../types';
+import { Position, Dimensions } from '../constants/types';
 import { HANDLE_POSITIONS, ALL_HANDLE_POSITIONS } from '../constants/handles';
 
 type HandlesProps = {
