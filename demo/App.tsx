@@ -1,7 +1,7 @@
 /* eslint import/no-extraneous-dependencies: "off" */
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import NeatComponent from '../src/NeatComponent';
+import ExcitedSVG from '../src/ExcitedSVG';
 
 type Dimensions = {
   height: number;
@@ -81,7 +81,12 @@ const StateForm = ({
       <legend>Misc</legend>
       <p>
         <label htmlFor="borderPadding">Border Padding</label>
-        <input name="borderPadding" value={borderPadding} />
+        <input
+          onChange={parent.handleBorderPaddingChange.bind(parent)}
+          type="number"
+          name="borderPadding"
+          value={borderPadding}
+        />
       </p>
     </fieldset>
   </form>
@@ -90,12 +95,18 @@ const StateForm = ({
 const AppView = (state: AppState) => (
   <div>
     <svg height="500" width="500">
-      <image
-        height={state.dimensions.height}
-        width={state.dimensions.width}
-        preserveAspectRatio="none"
-        href={IMAGE_HREF}
-      />
+      <ExcitedSVG
+        dimensions={state.dimensions}
+        position={state.position}
+        borderPadding={state.borderPadding}
+      >
+        <image
+          height={state.dimensions.height}
+          width={state.dimensions.width}
+          preserveAspectRatio="none"
+          href={IMAGE_HREF}
+        />
+      </ExcitedSVG>
     </svg>
     {StateForm(state)}
   </div>
@@ -143,6 +154,16 @@ class App extends React.Component<AppProps, AppState> {
       this.setState({
         ...this.state,
         position: { ...this.state.position, y: parsedValue },
+      });
+    }
+  }
+
+  handleBorderPaddingChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+    const parsedValue = parseInt(target.value);
+    if (!isNaN(parsedValue)) {
+      this.setState({
+        ...this.state,
+        borderPadding: parsedValue,
       });
     }
   }
