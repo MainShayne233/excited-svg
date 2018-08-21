@@ -17,6 +17,7 @@ type AppProps = {};
 type AppState = {
   parent: App;
   borderPadding: number;
+  handleDimension: number;
   dimensions: Dimensions;
   position: Position;
 };
@@ -26,6 +27,7 @@ const IMAGE_HREF =
 
 const INITIAL_STATE = {
   borderPadding: 10,
+  handleDimension: 10,
   dimensions: {
     height: 100,
     width: 100,
@@ -40,6 +42,7 @@ const StateForm = ({
   dimensions,
   position,
   borderPadding,
+  handleDimension,
   parent,
 }: AppState) => (
   <form>
@@ -87,6 +90,13 @@ const StateForm = ({
           name="borderPadding"
           value={borderPadding}
         />
+        <label htmlFor="handleDimension">Border Padding</label>
+        <input
+          onChange={parent.handleHandleDimensionChange.bind(parent)}
+          type="number"
+          name="handleDimension"
+          value={handleDimension}
+        />
       </p>
     </fieldset>
   </form>
@@ -99,6 +109,8 @@ const AppView = (state: AppState) => (
         dimensions={state.dimensions}
         position={state.position}
         borderPadding={state.borderPadding}
+        handleDimension={state.handleDimension}
+        onDrag={state.parent.onDrag.bind(state.parent)}
       >
         <image
           height={state.dimensions.height}
@@ -166,6 +178,29 @@ class App extends React.Component<AppProps, AppState> {
         borderPadding: parsedValue,
       });
     }
+  }
+
+  handleHandleDimensionChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+    const parsedValue = parseInt(target.value);
+    if (!isNaN(parsedValue)) {
+      this.setState({
+        ...this.state,
+        handleDimension: parsedValue,
+      });
+    }
+  }
+
+  onDrag(
+    event: MouseEvent,
+    { deltaX, deltaY }: { deltaX: number; deltaY: number },
+  ) {
+    this.setState({
+      ...this.state,
+      position: {
+        x: this.state.position.x + deltaX,
+        y: this.state.position.y + deltaY,
+      },
+    });
   }
 
   render() {

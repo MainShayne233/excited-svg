@@ -6,7 +6,7 @@ Animating SVGs with transforms!!!
 
 ## Feature wishlist:
 
-- [ ] - Draggable SVGs
+- [x] - Draggable SVGs
 - [ ] - Handles for resizing
 - [ ] - Handle for rotating
 - [ ] - Custom handle actions
