@@ -90,7 +90,7 @@ const StateForm = ({
           name="borderPadding"
           value={borderPadding}
         />
-        <label htmlFor="handleDimension">Border Padding</label>
+        <label htmlFor="handleDimension">Handle Dimension</label>
         <input
           onChange={parent.handleHandleDimensionChange.bind(parent)}
           type="number"
@@ -111,6 +111,7 @@ const AppView = (state: AppState) => (
         borderPadding={state.borderPadding}
         handleDimension={state.handleDimension}
         onDrag={state.parent.onDrag.bind(state.parent)}
+        onHandleDrag={state.parent.onHandleDrag.bind(state.parent)}
       >
         <image
           height={state.dimensions.height}
@@ -201,6 +202,128 @@ class App extends React.Component<AppProps, AppState> {
         y: this.state.position.y + deltaY,
       },
     });
+  }
+
+  onHandleDrag(
+    handleName: string,
+    event: MouseEvent,
+    { deltaX, deltaY }: { deltaX: number; deltaY: number },
+  ) {
+    console.log(handleName);
+    switch (handleName) {
+      case 'TOP_CENTER': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height - deltaY,
+          },
+          position: {
+            ...this.state.position,
+            y: this.state.position.y + deltaY,
+          },
+        });
+        break;
+      }
+
+      case 'TOP_RIGHT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height - deltaY,
+            width: this.state.dimensions.width + deltaX,
+          },
+          position: {
+            ...this.state.position,
+            y: this.state.position.y + deltaY,
+          },
+        });
+        break;
+      }
+
+      case 'TOP_LEFT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height - deltaY,
+            width: this.state.dimensions.width - deltaX,
+          },
+          position: {
+            ...this.state.position,
+            x: this.state.position.x + deltaX,
+            y: this.state.position.y + deltaY,
+          },
+        });
+        break;
+      }
+
+      case 'MIDDLE_LEFT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            width: this.state.dimensions.width - deltaX,
+          },
+          position: {
+            ...this.state.position,
+            x: this.state.position.x + deltaX,
+          },
+        });
+        break;
+      }
+
+      case 'MIDDLE_RIGHT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            width: this.state.dimensions.width + deltaX,
+          },
+        });
+        break;
+      }
+
+      case 'BOTTOM_LEFT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height + deltaY,
+            width: this.state.dimensions.width - deltaX,
+          },
+          position: {
+            ...this.state.position,
+            x: this.state.position.x + deltaX,
+          },
+        });
+        break;
+      }
+
+      case 'BOTTOM_CENTER': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height + deltaY,
+          },
+        });
+        break;
+      }
+
+      case 'BOTTOM_RIGHT': {
+        this.setState({
+          ...this.state,
+          dimensions: {
+            ...this.state.dimensions,
+            height: this.state.dimensions.height + deltaY,
+            width: this.state.dimensions.width + deltaX,
+          },
+        });
+        break;
+      }
+    }
   }
 
   render() {

@@ -1,33 +1,17 @@
 import * as React from 'react';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
+import Handles from './Handles/Handles';
+import { ExcitedSVGProps } from './types';
 
-type Dimensions = {
-  height: number;
-  width: number;
-};
-
-type Position = {
-  x: number;
-  y: number;
-};
-
-type AppProps = {
-  borderPadding: number;
-  handleDimension: number;
-  dimensions: Dimensions;
-  position: Position;
-  children: JSX.Element;
-  onDrag: DraggableEventHandler;
-};
-
-const ExcitedSVG: React.SFC<AppProps> = ({
+const ExcitedSVG: React.SFC<ExcitedSVGProps> = ({
   position,
   dimensions,
   borderPadding,
   handleDimension,
   children,
   onDrag,
-}: AppProps) => (
+  onHandleDrag,
+}: ExcitedSVGProps) => (
   <svg>
     <DraggableCore onDrag={onDrag}>
       <svg
@@ -38,6 +22,13 @@ const ExcitedSVG: React.SFC<AppProps> = ({
         {children}
       </svg>
     </DraggableCore>
+    <Handles
+      position={position}
+      dimensions={dimensions}
+      borderPadding={borderPadding}
+      handleDimension={handleDimension}
+      onHandleDrag={onHandleDrag}
+    />
   </svg>
 );
 

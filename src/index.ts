@@ -1,3 +1,3 @@
-import NeatComponent from './NeatComponent';
+import ExcitedSVG from './ExcitedSVG';
 
-export default NeatComponent;
+export default ExcitedSVG;
