@@ -13,7 +13,8 @@ export type Position = {
 export type ExcitedSVGProps = {
   borderPadding: number;
   handleDimension: number;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   position: Position;
   children: JSX.Element;
   onDrag: DraggableEventHandler;

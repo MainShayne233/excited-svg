@@ -10,10 +10,8 @@ Enzyme.configure({ adapter: new EnzymeAdapter() });
 const INITIAL_STATE = {
   borderPadding: 10,
   handleDimension: 10,
-  dimensions: {
-    height: 100,
-    width: 100,
-  },
+  height: 100,
+  width: 100,
   position: {
     x: 100,
     y: 100,

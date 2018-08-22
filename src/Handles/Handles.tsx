@@ -5,7 +5,8 @@ import { HANDLE_POSITIONS, ALL_HANDLE_POSITIONS } from '../constants/handles';
 
 type HandlesProps = {
   position: Position;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   borderPadding: number;
   handleDimension: number;
   onHandleDrag: DraggableEventHandler;
@@ -13,14 +14,16 @@ type HandlesProps = {
 
 type HandlesBorderProps = {
   position: Position;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   borderPadding: number;
   handleDimension: number;
 };
 
 type HandleGrabsProps = {
   position: Position;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   borderPadding: number;
   handleDimension: number;
   onHandleDrag: DraggableEventHandler;
@@ -30,18 +33,24 @@ type HandleProps = {
   key: string;
   handlePositionName: string;
   position: Position;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   borderPadding: number;
   handleDimension: number;
   onDrag: DraggableEventHandler;
 };
 
-const xHandlePosition = (
-  handlePositionName: string,
-  position: Position,
-  dimensions: Dimensions,
-  borderPadding: number,
-) => {
+const xHandlePosition = ({
+  handlePositionName,
+  position,
+  width,
+  borderPadding,
+}: {
+  handlePositionName: string;
+  position: Position;
+  width: number;
+  borderPadding: number;
+}) => {
   if (
     [
       HANDLE_POSITIONS.TOP_LEFT,
@@ -55,18 +64,22 @@ const xHandlePosition = (
       handlePositionName,
     )
   ) {
-    return position.x + dimensions.width / 2 + borderPadding;
+    return position.x + width / 2 + borderPadding;
   } else {
-    return position.x + dimensions.width + 2 * borderPadding;
+    return position.x + width + 2 * borderPadding;
   }
 };
-
-const yHandlePosition = (
-  handlePositionName: string,
-  position: Position,
-  dimensions: Dimensions,
-  borderPadding: number,
-) => {
+const yHandlePosition = ({
+  handlePositionName,
+  position,
+  height,
+  borderPadding,
+}: {
+  handlePositionName: string;
+  position: Position;
+  height: number;
+  borderPadding: number;
+}) => {
   if (
     [
       HANDLE_POSITIONS.TOP_LEFT,
@@ -80,9 +93,9 @@ const yHandlePosition = (
       handlePositionName,
     )
   ) {
-    return position.y + dimensions.height / 2 + borderPadding;
+    return position.y + height / 2 + borderPadding;
   } else {
-    return position.y + dimensions.height + 2 * borderPadding;
+    return position.y + height + 2 * borderPadding;
   }
 };
 
@@ -127,25 +140,26 @@ const handleHandleDrag = (
 const Handle = ({
   handlePositionName,
   position,
-  dimensions,
+  height,
+  width,
   borderPadding,
   handleDimension,
   onDrag,
 }: HandleProps) => (
   <DraggableCore onDrag={onDrag.bind(null, handlePositionName)}>
     <rect
-      x={xHandlePosition(
+      x={xHandlePosition({
         handlePositionName,
         position,
-        dimensions,
+        width,
         borderPadding,
-      )}
-      y={yHandlePosition(
+      })}
+      y={yHandlePosition({
         handlePositionName,
         position,
-        dimensions,
+        height,
         borderPadding,
-      )}
+      })}
       fill="blue"
       height={handleDimension}
       width={handleDimension}
@@ -156,7 +170,8 @@ const Handle = ({
 
 const HandlesBorder: React.SFC<HandlesBorderProps> = ({
   position,
-  dimensions,
+  height,
+  width,
   borderPadding,
   handleDimension,
 }: HandlesBorderProps) => (
@@ -164,8 +179,8 @@ const HandlesBorder: React.SFC<HandlesBorderProps> = ({
     id="handles"
     fill="none"
     stroke="blue"
-    height={dimensions.height + 2 * borderPadding}
-    width={dimensions.width + 2 * borderPadding}
+    height={height + 2 * borderPadding}
+    width={width + 2 * borderPadding}
     x={position.x + handleDimension / 2}
     y={position.y + handleDimension / 2}
   />
@@ -174,7 +189,8 @@ const HandlesBorder: React.SFC<HandlesBorderProps> = ({
 const HandleGrabs = ({
   position,
   borderPadding,
-  dimensions,
+  height,
+  width,
   handleDimension,
   onHandleDrag,
 }: HandleGrabsProps) => (
@@ -183,7 +199,8 @@ const HandleGrabs = ({
       <Handle
         key={handlePositionName}
         handlePositionName={handlePositionName}
-        dimensions={dimensions}
+        height={height}
+        width={width}
         position={position}
         borderPadding={borderPadding}
         handleDimension={handleDimension}
@@ -195,7 +212,8 @@ const HandleGrabs = ({
 
 const Handles: React.SFC<HandlesProps> = ({
   position,
-  dimensions,
+  height,
+  width,
   borderPadding,
   handleDimension,
   onHandleDrag,
@@ -203,13 +221,15 @@ const Handles: React.SFC<HandlesProps> = ({
   <svg>
     <HandlesBorder
       borderPadding={borderPadding}
-      dimensions={dimensions}
+      height={height}
+      width={width}
       position={position}
       handleDimension={handleDimension}
     />
     <HandleGrabs
       borderPadding={borderPadding}
-      dimensions={dimensions}
+      height={height}
+      width={width}
       position={position}
       handleDimension={handleDimension}
       onHandleDrag={onHandleDrag}

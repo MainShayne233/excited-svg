@@ -3,11 +3,6 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import ExcitedSVG from '../src/ExcitedSVG';
 
-type Dimensions = {
-  height: number;
-  width: number;
-};
-
 type Position = {
   x: number;
   y: number;
@@ -18,7 +13,8 @@ type AppState = {
   parent: App;
   borderPadding: number;
   handleDimension: number;
-  dimensions: Dimensions;
+  height: number;
+  width: number;
   position: Position;
 };
 
@@ -28,10 +24,8 @@ const IMAGE_HREF =
 const INITIAL_STATE = {
   borderPadding: 10,
   handleDimension: 10,
-  dimensions: {
-    height: 100,
-    width: 100,
-  },
+  height: 100,
+  width: 100,
   position: {
     x: 100,
     y: 100,
@@ -39,7 +33,8 @@ const INITIAL_STATE = {
 };
 
 const StateForm = ({
-  dimensions,
+  height,
+  width,
   position,
   borderPadding,
   handleDimension,
@@ -54,14 +49,14 @@ const StateForm = ({
           onChange={parent.handleHeightChange.bind(parent)}
           type="number"
           name="height"
-          value={dimensions.height}
+          value={height}
         />
         <label htmlFor="width">Width</label>
         <input
           onChange={parent.handleWidthChange.bind(parent)}
           type="number"
           name="width"
-          value={dimensions.width}
+          value={width}
         />
       </p>
       <legend>Position</legend>
@@ -106,7 +101,8 @@ const AppView = (state: AppState) => (
   <div>
     <svg height="500" width="500">
       <ExcitedSVG
-        dimensions={state.dimensions}
+        height={state.height}
+        width={state.width}
         position={state.position}
         borderPadding={state.borderPadding}
         handleDimension={state.handleDimension}
@@ -114,8 +110,8 @@ const AppView = (state: AppState) => (
         onHandleDrag={state.parent.onHandleDrag.bind(state.parent)}
       >
         <image
-          height={state.dimensions.height}
-          width={state.dimensions.width}
+          height={state.height}
+          width={state.width}
           preserveAspectRatio="none"
           href={IMAGE_HREF}
         />
@@ -136,7 +132,7 @@ class App extends React.Component<AppProps, AppState> {
     if (!isNaN(parsedValue)) {
       this.setState({
         ...this.state,
-        dimensions: { ...this.state.dimensions, height: parsedValue },
+        height: parsedValue,
       });
     }
   }
@@ -146,7 +142,7 @@ class App extends React.Component<AppProps, AppState> {
     if (!isNaN(parsedValue)) {
       this.setState({
         ...this.state,
-        dimensions: { ...this.state.dimensions, width: parsedValue },
+        width: parsedValue,
       });
     }
   }
@@ -214,10 +210,7 @@ class App extends React.Component<AppProps, AppState> {
       case 'TOP_CENTER': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height - deltaY,
-          },
+          height: this.state.height - deltaY,
           position: {
             ...this.state.position,
             y: this.state.position.y + deltaY,
@@ -229,11 +222,8 @@ class App extends React.Component<AppProps, AppState> {
       case 'TOP_RIGHT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height - deltaY,
-            width: this.state.dimensions.width + deltaX,
-          },
+          height: this.state.height - deltaY,
+          width: this.state.width + deltaX,
           position: {
             ...this.state.position,
             y: this.state.position.y + deltaY,
@@ -245,11 +235,8 @@ class App extends React.Component<AppProps, AppState> {
       case 'TOP_LEFT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height - deltaY,
-            width: this.state.dimensions.width - deltaX,
-          },
+          height: this.state.height - deltaY,
+          width: this.state.width - deltaX,
           position: {
             ...this.state.position,
             x: this.state.position.x + deltaX,
@@ -262,10 +249,7 @@ class App extends React.Component<AppProps, AppState> {
       case 'MIDDLE_LEFT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            width: this.state.dimensions.width - deltaX,
-          },
+          width: this.state.width - deltaX,
           position: {
             ...this.state.position,
             x: this.state.position.x + deltaX,
@@ -277,10 +261,7 @@ class App extends React.Component<AppProps, AppState> {
       case 'MIDDLE_RIGHT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            width: this.state.dimensions.width + deltaX,
-          },
+          width: this.state.width + deltaX,
         });
         break;
       }
@@ -288,11 +269,8 @@ class App extends React.Component<AppProps, AppState> {
       case 'BOTTOM_LEFT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height + deltaY,
-            width: this.state.dimensions.width - deltaX,
-          },
+          height: this.state.height + deltaY,
+          width: this.state.width - deltaX,
           position: {
             ...this.state.position,
             x: this.state.position.x + deltaX,
@@ -304,10 +282,7 @@ class App extends React.Component<AppProps, AppState> {
       case 'BOTTOM_CENTER': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height + deltaY,
-          },
+          height: this.state.height + deltaY,
         });
         break;
       }
@@ -315,11 +290,8 @@ class App extends React.Component<AppProps, AppState> {
       case 'BOTTOM_RIGHT': {
         this.setState({
           ...this.state,
-          dimensions: {
-            ...this.state.dimensions,
-            height: this.state.dimensions.height + deltaY,
-            width: this.state.dimensions.width + deltaX,
-          },
+          height: this.state.height + deltaY,
+          width: this.state.width + deltaX,
         });
         break;
       }

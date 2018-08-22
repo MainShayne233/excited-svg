@@ -5,7 +5,8 @@ import { ExcitedSVGProps } from './constants/types';
 
 const ExcitedSVG: React.SFC<ExcitedSVGProps> = ({
   position,
-  dimensions,
+  height,
+  width,
   borderPadding,
   handleDimension,
   children,
@@ -24,7 +25,8 @@ const ExcitedSVG: React.SFC<ExcitedSVGProps> = ({
     </DraggableCore>
     <Handles
       position={position}
-      dimensions={dimensions}
+    height={height}
+      width={width}
       borderPadding={borderPadding}
       handleDimension={handleDimension}
       onHandleDrag={onHandleDrag}
