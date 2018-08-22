@@ -3,11 +3,6 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import ExcitedSVG from '../src/ExcitedSVG';
 
-type Position = {
-  x: number;
-  y: number;
-};
-
 type AppProps = {};
 type AppState = {
   parent: App;
@@ -15,7 +10,8 @@ type AppState = {
   handleDimension: number;
   height: number;
   width: number;
-  position: Position;
+  positionX: number;
+  positionY: number;
 };
 
 const IMAGE_HREF =
@@ -26,16 +22,15 @@ const INITIAL_STATE = {
   handleDimension: 10,
   height: 100,
   width: 100,
-  position: {
-    x: 100,
-    y: 100,
-  },
+  positionX: 100,
+  positionY: 100,
 };
 
 const StateForm = ({
   height,
   width,
-  position,
+  positionX,
+  positionY,
   borderPadding,
   handleDimension,
   parent,
@@ -66,14 +61,14 @@ const StateForm = ({
           onChange={parent.handlePositionXChange.bind(parent)}
           type="number"
           name="x"
-          value={position.x}
+          value={positionX}
         />
         <label htmlFor="y">Y</label>
         <input
           onChange={parent.handlePositionYChange.bind(parent)}
           type="number"
           name="y"
-          value={position.y}
+          value={positionY}
         />
       </p>
       <legend>Misc</legend>
@@ -103,7 +98,8 @@ const AppView = (state: AppState) => (
       <ExcitedSVG
         height={state.height}
         width={state.width}
-        position={state.position}
+        positionX={state.positionX}
+        positionY={state.positionY}
         borderPadding={state.borderPadding}
         handleDimension={state.handleDimension}
         onDrag={state.parent.onDrag.bind(state.parent)}
@@ -152,7 +148,7 @@ class App extends React.Component<AppProps, AppState> {
     if (!isNaN(parsedValue)) {
       this.setState({
         ...this.state,
-        position: { ...this.state.position, x: parsedValue },
+        positionX: parsedValue,
       });
     }
   }
@@ -162,7 +158,7 @@ class App extends React.Component<AppProps, AppState> {
     if (!isNaN(parsedValue)) {
       this.setState({
         ...this.state,
-        position: { ...this.state.position, y: parsedValue },
+        positionY: parsedValue,
       });
     }
   }
@@ -193,10 +189,8 @@ class App extends React.Component<AppProps, AppState> {
   ) {
     this.setState({
       ...this.state,
-      position: {
-        x: this.state.position.x + deltaX,
-        y: this.state.position.y + deltaY,
-      },
+      positionX: this.state.positionX + deltaX,
+      positionY: this.state.positionY + deltaY,
     });
   }
 
@@ -211,10 +205,7 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({
           ...this.state,
           height: this.state.height - deltaY,
-          position: {
-            ...this.state.position,
-            y: this.state.position.y + deltaY,
-          },
+          positionY: this.state.positionY + deltaY,
         });
         break;
       }
@@ -224,10 +215,7 @@ class App extends React.Component<AppProps, AppState> {
           ...this.state,
           height: this.state.height - deltaY,
           width: this.state.width + deltaX,
-          position: {
-            ...this.state.position,
-            y: this.state.position.y + deltaY,
-          },
+          positionY: this.state.positionY + deltaY,
         });
         break;
       }
@@ -237,11 +225,8 @@ class App extends React.Component<AppProps, AppState> {
           ...this.state,
           height: this.state.height - deltaY,
           width: this.state.width - deltaX,
-          position: {
-            ...this.state.position,
-            x: this.state.position.x + deltaX,
-            y: this.state.position.y + deltaY,
-          },
+          positionX: this.state.positionX + deltaX,
+          positionY: this.state.positionY + deltaY,
         });
         break;
       }
@@ -250,10 +235,7 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({
           ...this.state,
           width: this.state.width - deltaX,
-          position: {
-            ...this.state.position,
-            x: this.state.position.x + deltaX,
-          },
+          positionX: this.state.positionX + deltaX,
         });
         break;
       }
@@ -271,10 +253,7 @@ class App extends React.Component<AppProps, AppState> {
           ...this.state,
           height: this.state.height + deltaY,
           width: this.state.width - deltaX,
-          position: {
-            ...this.state.position,
-            x: this.state.position.x + deltaX,
-          },
+          positionX: this.state.positionX + deltaX,
         });
         break;
       }

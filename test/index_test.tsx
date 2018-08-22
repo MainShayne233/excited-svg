@@ -12,10 +12,8 @@ const INITIAL_STATE = {
   handleDimension: 10,
   height: 100,
   width: 100,
-  position: {
-    x: 100,
-    y: 100,
-  },
+  positionX: 100,
+  positionY: 100,
   onDrag: () => {},
   onHandleDrag: () => {},
   children: <div />,
