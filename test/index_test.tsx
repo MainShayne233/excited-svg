@@ -8,12 +8,16 @@ import ExcitedSVG from '../src/ExcitedSVG';
 Enzyme.configure({ adapter: new EnzymeAdapter() });
 
 const INITIAL_STATE = {
-  borderPadding: 10,
-  handleDimension: 10,
-  height: 100,
-  width: 100,
-  positionX: 100,
-  positionY: 100,
+  options: {
+    borderPadding: 10,
+    handleDimension: 10,
+  },
+  element: {
+    height: 100,
+    width: 100,
+    positionX: 100,
+    positionY: 100,
+  },
   onDrag: () => {},
   onHandleDrag: () => {},
   children: <div />,

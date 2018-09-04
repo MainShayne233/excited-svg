@@ -2,39 +2,32 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import ExcitedSVG from '../src/ExcitedSVG';
+import { ExcitedElement, ExcitedOptions } from '../src/constants/types';
 
 type AppProps = {};
 type AppState = {
   parent: App;
-  borderPadding: number;
-  handleDimension: number;
-  height: number;
-  width: number;
-  positionX: number;
-  positionY: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
 };
 
 const IMAGE_HREF =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Elm_logo.svg/2000px-Elm_logo.svg.png';
 
 const INITIAL_STATE = {
-  borderPadding: 10,
-  handleDimension: 10,
-  height: 100,
-  width: 100,
-  positionX: 100,
-  positionY: 100,
+  options: {
+    borderPadding: 10,
+    handleDimension: 10,
+  },
+  element: {
+    height: 100,
+    width: 100,
+    positionX: 100,
+    positionY: 100,
+  },
 };
 
-const StateForm = ({
-  height,
-  width,
-  positionX,
-  positionY,
-  borderPadding,
-  handleDimension,
-  parent,
-}: AppState) => (
+const StateForm = ({ element, options, parent }: AppState) => (
   <form>
     <fieldset>
       <legend>Dimensions</legend>
@@ -44,14 +37,14 @@ const StateForm = ({
           onChange={parent.handleHeightChange.bind(parent)}
           type="number"
           name="height"
-          value={height}
+          value={element.height}
         />
         <label htmlFor="width">Width</label>
         <input
           onChange={parent.handleWidthChange.bind(parent)}
           type="number"
           name="width"
-          value={width}
+          value={element.width}
         />
       </p>
       <legend>Position</legend>
@@ -61,14 +54,14 @@ const StateForm = ({
           onChange={parent.handlePositionXChange.bind(parent)}
           type="number"
           name="x"
-          value={positionX}
+          value={element.positionX}
         />
         <label htmlFor="y">Y</label>
         <input
           onChange={parent.handlePositionYChange.bind(parent)}
           type="number"
           name="y"
-          value={positionY}
+          value={element.positionY}
         />
       </p>
       <legend>Misc</legend>
@@ -78,14 +71,14 @@ const StateForm = ({
           onChange={parent.handleBorderPaddingChange.bind(parent)}
           type="number"
           name="borderPadding"
-          value={borderPadding}
+          value={options.borderPadding}
         />
         <label htmlFor="handleDimension">Handle Dimension</label>
         <input
           onChange={parent.handleHandleDimensionChange.bind(parent)}
           type="number"
           name="handleDimension"
-          value={handleDimension}
+          value={options.handleDimension}
         />
       </p>
     </fieldset>
@@ -96,18 +89,14 @@ const AppView = (state: AppState) => (
   <div>
     <svg height="500" width="500">
       <ExcitedSVG
-        height={state.height}
-        width={state.width}
-        positionX={state.positionX}
-        positionY={state.positionY}
-        borderPadding={state.borderPadding}
-        handleDimension={state.handleDimension}
+        element={state.element}
+        options={state.options}
         onDrag={state.parent.onDrag.bind(state.parent)}
         onHandleDrag={state.parent.onHandleDrag.bind(state.parent)}
       >
         <image
-          height={state.height}
-          width={state.width}
+          height={state.element.height}
+          width={state.element.width}
           preserveAspectRatio="none"
           href={IMAGE_HREF}
         />
@@ -126,8 +115,7 @@ class App extends React.Component<AppProps, AppState> {
   handleHeightChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setElementState({
         height: parsedValue,
       });
     }
@@ -136,8 +124,7 @@ class App extends React.Component<AppProps, AppState> {
   handleWidthChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setElementState({
         width: parsedValue,
       });
     }
@@ -146,8 +133,7 @@ class App extends React.Component<AppProps, AppState> {
   handlePositionXChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setElementState({
         positionX: parsedValue,
       });
     }
@@ -156,8 +142,7 @@ class App extends React.Component<AppProps, AppState> {
   handlePositionYChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setElementState({
         positionY: parsedValue,
       });
     }
@@ -166,8 +151,7 @@ class App extends React.Component<AppProps, AppState> {
   handleBorderPaddingChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setOptionsState({
         borderPadding: parsedValue,
       });
     }
@@ -176,22 +160,44 @@ class App extends React.Component<AppProps, AppState> {
   handleHandleDimensionChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     const parsedValue = parseInt(target.value);
     if (!isNaN(parsedValue)) {
-      this.setState({
-        ...this.state,
+      this.setOptionsState({
         handleDimension: parsedValue,
       });
     }
+  }
+
+  setElementState(params: object) {
+    this.setState({
+      element: {
+        ...this.state.element,
+        ...params,
+      },
+    });
+  }
+
+  setOptionsState(params: object) {
+    this.setState({
+      options: {
+        ...this.state.options,
+        ...params,
+      },
+    });
+  }
+
+  addToElementState({ positionX = 0, positionY = 0, height = 0, width = 0 }) {
+    this.setElementState({
+      positionX: this.state.element.positionX + positionX,
+      positionY: this.state.element.positionY + positionY,
+      height: this.state.element.height + height,
+      width: this.state.element.width + width,
+    });
   }
 
   onDrag(
     event: MouseEvent,
     { deltaX, deltaY }: { deltaX: number; deltaY: number },
   ) {
-    this.setState({
-      ...this.state,
-      positionX: this.state.positionX + deltaX,
-      positionY: this.state.positionY + deltaY,
-    });
+    this.addToElementState({ positionX: deltaX, positionY: deltaY });
   }
 
   onHandleDrag(
@@ -199,78 +205,62 @@ class App extends React.Component<AppProps, AppState> {
     event: MouseEvent,
     { deltaX, deltaY }: { deltaX: number; deltaY: number },
   ) {
-    console.log(handleName);
     switch (handleName) {
       case 'TOP_CENTER': {
-        this.setState({
-          ...this.state,
-          height: this.state.height - deltaY,
-          positionY: this.state.positionY + deltaY,
+        this.addToElementState({
+          height: deltaY * -1,
+          positionY: deltaY,
         });
         break;
       }
-
       case 'TOP_RIGHT': {
-        this.setState({
-          ...this.state,
-          height: this.state.height - deltaY,
-          width: this.state.width + deltaX,
-          positionY: this.state.positionY + deltaY,
+        this.addToElementState({
+          height: deltaY * -1,
+          width: deltaX,
+          positionY: deltaY,
         });
         break;
       }
-
       case 'TOP_LEFT': {
-        this.setState({
-          ...this.state,
-          height: this.state.height - deltaY,
-          width: this.state.width - deltaX,
-          positionX: this.state.positionX + deltaX,
-          positionY: this.state.positionY + deltaY,
+        this.addToElementState({
+          height: deltaY * -1,
+          width: deltaX * -1,
+          positionX: deltaX,
+          positionY: deltaY,
         });
         break;
       }
-
       case 'MIDDLE_LEFT': {
-        this.setState({
-          ...this.state,
-          width: this.state.width - deltaX,
-          positionX: this.state.positionX + deltaX,
+        this.addToElementState({
+          width: deltaX * -1,
+          positionX: deltaX,
         });
         break;
       }
-
       case 'MIDDLE_RIGHT': {
-        this.setState({
-          ...this.state,
-          width: this.state.width + deltaX,
+        this.addToElementState({
+          width: deltaX,
         });
         break;
       }
-
       case 'BOTTOM_LEFT': {
-        this.setState({
-          ...this.state,
-          height: this.state.height + deltaY,
-          width: this.state.width - deltaX,
-          positionX: this.state.positionX + deltaX,
+        this.addToElementState({
+          height: deltaY,
+          width: deltaX * -1,
+          positionX: deltaX,
         });
         break;
       }
-
       case 'BOTTOM_CENTER': {
-        this.setState({
-          ...this.state,
-          height: this.state.height + deltaY,
+        this.addToElementState({
+          height: deltaY,
         });
         break;
       }
-
       case 'BOTTOM_RIGHT': {
-        this.setState({
-          ...this.state,
-          height: this.state.height + deltaY,
-          width: this.state.width + deltaX,
+        this.addToElementState({
+          height: deltaY,
+          width: deltaX,
         });
         break;
       }

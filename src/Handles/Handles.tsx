@@ -1,58 +1,41 @@
 import * as React from 'react';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
 import { HANDLE_POSITIONS, ALL_HANDLE_POSITIONS } from '../constants/handles';
+import { ExcitedElement, ExcitedOptions } from '../constants/types';
 
 type HandlesProps = {
-  positionX: number;
-  positionY: number;
-  height: number;
-  width: number;
-  borderPadding: number;
-  handleDimension: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
   onHandleDrag: DraggableEventHandler;
 };
 
 type HandlesBorderProps = {
-  positionX: number;
-  positionY: number;
-  height: number;
-  width: number;
-  borderPadding: number;
-  handleDimension: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
 };
 
 type HandleGrabsProps = {
-  positionX: number;
-  positionY: number;
-  height: number;
-  width: number;
-  borderPadding: number;
-  handleDimension: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
   onHandleDrag: DraggableEventHandler;
 };
 
 type HandleProps = {
-  positionX: number;
-  positionY: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
   key: string;
   handlePositionName: string;
-  height: number;
-  width: number;
-  borderPadding: number;
-  handleDimension: number;
   onDrag: DraggableEventHandler;
 };
 
 const xHandlePosition = ({
   handlePositionName,
-  positionX,
-  width,
-  borderPadding,
+  element,
+  options,
 }: {
   handlePositionName: string;
-  positionX: number;
-  width: number;
-  borderPadding: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
 }) => {
   if (
     [
@@ -61,27 +44,25 @@ const xHandlePosition = ({
       HANDLE_POSITIONS.BOTTOM_LEFT,
     ].includes(handlePositionName)
   ) {
-    return positionX;
+    return element.positionX;
   } else if (
     [HANDLE_POSITIONS.TOP_CENTER, HANDLE_POSITIONS.BOTTOM_CENTER].includes(
       handlePositionName,
     )
   ) {
-    return positionX + width / 2 + borderPadding;
+    return element.positionX + element.width / 2 + options.borderPadding;
   } else {
-    return positionX + width + 2 * borderPadding;
+    return element.positionX + element.width + 2 * options.borderPadding;
   }
 };
 const yHandlePosition = ({
   handlePositionName,
-  positionY,
-  height,
-  borderPadding,
+  element,
+  options,
 }: {
   handlePositionName: string;
-  positionY: number;
-  height: number;
-  borderPadding: number;
+  element: ExcitedElement;
+  options: ExcitedOptions;
 }) => {
   if (
     [
@@ -90,15 +71,15 @@ const yHandlePosition = ({
       HANDLE_POSITIONS.TOP_RIGHT,
     ].includes(handlePositionName)
   ) {
-    return positionY;
+    return element.positionY;
   } else if (
     [HANDLE_POSITIONS.MIDDLE_LEFT, HANDLE_POSITIONS.MIDDLE_RIGHT].includes(
       handlePositionName,
     )
   ) {
-    return positionY + height / 2 + borderPadding;
+    return element.positionY + element.height / 2 + options.borderPadding;
   } else {
-    return positionY + height + 2 * borderPadding;
+    return element.positionY + element.height + 2 * options.borderPadding;
   }
 };
 
@@ -131,76 +112,54 @@ const handleStyle = (handlePositionName: string) => ({
 });
 
 const Handle = ({
+  element,
+  options,
   handlePositionName,
-  positionX,
-  positionY,
-  height,
-  width,
-  borderPadding,
-  handleDimension,
   onDrag,
 }: HandleProps) => (
   <DraggableCore onDrag={onDrag.bind(null, handlePositionName)}>
     <rect
       x={xHandlePosition({
         handlePositionName,
-        positionX,
-        width,
-        borderPadding,
+        element,
+        options,
       })}
       y={yHandlePosition({
         handlePositionName,
-        positionY,
-        height,
-        borderPadding,
+        element,
+        options,
       })}
       fill="blue"
-      height={handleDimension}
-      width={handleDimension}
+      height={options.handleDimension}
+      width={options.handleDimension}
       style={handleStyle(handlePositionName)}
     />
   </DraggableCore>
 );
 
 const HandlesBorder: React.SFC<HandlesBorderProps> = ({
-  positionX,
-  positionY,
-  height,
-  width,
-  borderPadding,
-  handleDimension,
+  element,
+  options,
 }: HandlesBorderProps) => (
   <rect
     id="handles"
     fill="none"
     stroke="blue"
-    height={height + 2 * borderPadding}
-    width={width + 2 * borderPadding}
-    x={positionX + handleDimension / 2}
-    y={positionY + handleDimension / 2}
+    height={element.height + 2 * options.borderPadding}
+    width={element.width + 2 * options.borderPadding}
+    x={element.positionX + options.handleDimension / 2}
+    y={element.positionY + options.handleDimension / 2}
   />
 );
 
-const HandleGrabs = ({
-  positionX,
-  positionY,
-  borderPadding,
-  height,
-  width,
-  handleDimension,
-  onHandleDrag,
-}: HandleGrabsProps) => (
+const HandleGrabs = ({ element, options, onHandleDrag }: HandleGrabsProps) => (
   <svg>
     {ALL_HANDLE_POSITIONS.map((handlePositionName) => (
       <Handle
         key={handlePositionName}
         handlePositionName={handlePositionName}
-        height={height}
-        width={width}
-        positionX={positionX}
-        positionY={positionY}
-        borderPadding={borderPadding}
-        handleDimension={handleDimension}
+        element={element}
+        options={options}
         onDrag={onHandleDrag}
       />
     ))}
@@ -208,30 +167,15 @@ const HandleGrabs = ({
 );
 
 const Handles: React.SFC<HandlesProps> = ({
-  positionX,
-  positionY,
-  height,
-  width,
-  borderPadding,
-  handleDimension,
+  element,
+  options,
   onHandleDrag,
 }: HandlesProps) => (
   <svg>
-    <HandlesBorder
-      borderPadding={borderPadding}
-      height={height}
-      width={width}
-      positionX={positionX}
-      positionY={positionY}
-      handleDimension={handleDimension}
-    />
+    <HandlesBorder element={element} options={options} />
     <HandleGrabs
-      borderPadding={borderPadding}
-      height={height}
-      width={width}
-      positionX={positionX}
-      positionY={positionY}
-      handleDimension={handleDimension}
+      element={element}
+      options={options}
       onHandleDrag={onHandleDrag}
     />
   </svg>

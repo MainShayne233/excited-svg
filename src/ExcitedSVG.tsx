@@ -1,38 +1,44 @@
 import * as React from 'react';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
 import Handles from './Handles/Handles';
-import { ExcitedSVGProps } from './constants/types';
+import { ExcitedElement, ExcitedOptions } from './constants/types';
 
-const ExcitedSVG: React.SFC<ExcitedSVGProps> = ({
-  positionX,
-  positionY,
-  height,
-  width,
-  borderPadding,
-  handleDimension,
+type Props = {
+  element: ExcitedElement;
+  options: ExcitedOptions;
+  children: JSX.Element;
+  onDrag: DraggableEventHandler;
+  onHandleDrag: DraggableEventHandler;
+};
+
+const style = { cursor: 'move' };
+
+const ExcitedSVG: React.SFC<Props> = ({
+  element,
+  options,
   children,
   onDrag,
   onHandleDrag,
-}: ExcitedSVGProps) => (
+}: Props) => (
   <svg>
     <DraggableCore onDrag={onDrag}>
       <svg
-        x={positionX + borderPadding + handleDimension / 2}
-        y={positionY + borderPadding + handleDimension / 2}
-        style={{ cursor: 'move' }}
+        x={
+          element.positionX +
+          options.borderPadding +
+          options.handleDimension / 2
+        }
+        y={
+          element.positionY +
+          options.borderPadding +
+          options.handleDimension / 2
+        }
+        style={style}
       >
         {children}
       </svg>
     </DraggableCore>
-    <Handles
-      positionX={positionX}
-      positionY={positionY}
-      height={height}
-      width={width}
-      borderPadding={borderPadding}
-      handleDimension={handleDimension}
-      onHandleDrag={onHandleDrag}
-    />
+    <Handles element={element} options={options} onHandleDrag={onHandleDrag} />
   </svg>
 );
 
