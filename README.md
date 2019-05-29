@@ -2,6 +2,8 @@
 
 Animating SVGs with transforms!!!
 
+![Demo](./demo-app.gif)
+
 🚧 Under construction 🚧
 
 ## Run With Development App
